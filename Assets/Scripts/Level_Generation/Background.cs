@@ -7,24 +7,29 @@ public class Background : MonoBehaviour {
 	public GameObject[] tileList;
 	public int mapScale;
 	public int renderSizeBack,renderSizeFront;
-	private Transform player;
+	public Transform player;
 	public List<GameObject> tiles;
 
 	void Start () {
-		player = GameObject.FindGameObjectWithTag ("Player").transform;
 		tiles = new List<GameObject> ();
 	}
 
 	void Update(){
+		float curX = 0;
 
-		float curX = (player.position.x / mapScale);
-		int minX = Mathf.FloorToInt(curX - renderSizeBack);
+		if (player.gameObject.activeSelf) {
+			curX = (player.position.x / mapScale);	
+		} else {
+			curX = (Camera.main.transform.position.x / mapScale);
+		}
+
+		int minX = Mathf.FloorToInt (curX - renderSizeBack);
 		int maxX = Mathf.CeilToInt (curX + renderSizeFront);
 		List<GameObject> used = new List<GameObject> ();
 		for (int i = minX; i < maxX; i++) {
 			string index = "Tile " + i;
 			if (!tiles.Exists (x => x.name == index)) {
-				var go = (GameObject)Instantiate (tileList[Random.Range(0,tileList.Length)], new Vector3 (i * (mapScale), 0, 1), Quaternion.identity, transform);
+				var go = (GameObject)Instantiate (tileList [Random.Range (0, tileList.Length)], new Vector3 (i * (mapScale), 0, 1), Quaternion.identity, transform);
 				go.name = index;
 				tiles.Add (go);
 				used.Add (go);

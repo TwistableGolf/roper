@@ -21,13 +21,13 @@ public class PlayerStats : MonoBehaviour {
 		loadString = PlayerPrefs.GetString ("SaveString");
 		if (loadString == null || loadString == "") {
 			print ("No existing save");
-			SaveStats (false);
+			SaveStats ();
 		} else {
 			
 			string[] saveArray = loadString.Split (',');
-			if (saveArray.Length != 6) {
+			if (saveArray.Length != 7) {
 				print ("Save in incorrect format");
-				SaveStats (false);
+				SaveStats ();
 				return;
 			}
 			print (loadString);
@@ -36,26 +36,24 @@ public class PlayerStats : MonoBehaviour {
 			adsDisabled = bool.Parse (saveArray [2]);
 			powerups.magnetAmount = System.Int32.Parse (saveArray [3]);
 			powerups.magnetUpgradeLevel = System.Int32.Parse (saveArray [4]);
-			volumeLevel = System.Int32.Parse (saveArray [5]);
-			SaveStats (false);
+			powerups.ghostAmount = System.Int32.Parse (saveArray [5]);
+			powerups.ghostUpgradeLevel = System.Int32.Parse (saveArray [6]);
+			SaveStats ();
 		}
 	}
 
-	public void SaveStats(bool repeat = true){
+	public void SaveStats(){
 		string saveString = 
 			totalCoins + "," +
 			highScore + "," +
 			adsDisabled.ToString () + "," +
 			powerups.magnetAmount + "," +
 			powerups.magnetUpgradeLevel + "," +
-			volumeLevel;
+			powerups.ghostAmount + "," +
+			powerups.ghostUpgradeLevel;
 		
 		PlayerPrefs.SetString ("SaveString", saveString);
 		PlayerPrefs.Save ();
-	}
-
-	private void SaveCaller(){
-		SaveStats ();
 	}
 
 	void Update(){

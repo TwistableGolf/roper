@@ -36,11 +36,11 @@ public class PlayerController : MonoBehaviour {
 		rigid = GetComponent<Rigidbody2D> ();
 		stats = FindObjectOfType<PlayerStats> ();
 		render = GetComponent<SpriteRenderer> ();
-		#if UNITY_ADS
-		if (!Advertisement.isInitialized) {
-			Advertisement.Initialize ("1279490");
-		}
-		#endif
+//		#if UNITY_ADS
+//		if (!Advertisement.isInitialized) {
+//			Advertisement.Initialize ("1279490");
+//		}
+//		#endif
 	}
 	
 	// Update is called once per frame
@@ -250,7 +250,7 @@ public class PlayerController : MonoBehaviour {
 		dead = true;
 		scoreBonus = false;
 
-		stats.SaveStats (false);
+		stats.SaveStats ();
 		roundCounter++;
 		if (roundCounter == roundsToAd) {
 			roundCounter = 0;
@@ -268,6 +268,7 @@ public class PlayerController : MonoBehaviour {
 		rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 		rigid.bodyType = RigidbodyType2D.Static;
 		FindObjectOfType<PowerupController> ().DisableMagnet (true);
+		FindObjectOfType<PowerupController> ().DisableGhost (true);
 		GetComponent<BoxCollider2D> ().enabled = true;
 		GetComponent<PolygonCollider2D> ().enabled = false;
 	}

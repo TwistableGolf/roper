@@ -9,20 +9,26 @@ public class Shop : MonoBehaviour {
 	public Text coinCounter;
 	public Text magnetAmount,magnetLevel;
 	public Text magnetBuyPrice,magnetUpgradePrice;
+	public Text ghostAmount,ghostLevel;
+	public Text ghostBuyPrice,ghostUpgradePrice;
 	PowerupController powerups;
-	PlayerStats playerStats;
+	public PlayerStats playerStats;
 	void Start(){
 		powerups = FindObjectOfType<PowerupController>();
-		playerStats = FindObjectOfType<PlayerStats> ();
 	}
 
 	void Update () {
 		if (isOpen) {
+			coinCounter.text = playerStats.totalCoins.ToString();
 			magnetAmount.text = "Owned \n"+powerups.magnetAmount;
 			magnetLevel.text = "Current Level \n" + powerups.magnetUpgradeLevel;
-			coinCounter.text = playerStats.totalCoins.ToString();
 			magnetBuyPrice.text = "25";
-			magnetUpgradePrice.text = ((int)Mathf.Pow (powerups.magnetUpgradeLevel, 3)).ToString();
+			magnetUpgradePrice.text = ((int)Mathf.Pow (powerups.magnetUpgradeLevel, 3) + 50).ToString();
+
+			ghostAmount.text = "Owned \n"+powerups.ghostAmount;
+			ghostLevel.text = "Current Level \n" + powerups.ghostUpgradeLevel;
+			ghostBuyPrice.text = "25";
+			ghostUpgradePrice.text = ((int)Mathf.Pow (powerups.ghostUpgradeLevel, 3) + 50).ToString();
 		}
 			
 	}
@@ -36,13 +42,13 @@ public class Shop : MonoBehaviour {
 
 	public void BuyGhost(){
 		if (playerStats.totalCoins >= 25) {
-			powerups.magnetAmount++;
+			powerups.ghostAmount++;
 			playerStats.totalCoins -= 25;
 		}
 	}
 
 	public void UpgradeMagnet(){
-		int price = (int)Mathf.Pow (powerups.magnetUpgradeLevel, 3);
+		int price = (int)Mathf.Pow (powerups.magnetUpgradeLevel, 3) + 50;
 		if (playerStats.totalCoins >= price) {
 			powerups.magnetUpgradeLevel++;
 			playerStats.totalCoins -= price;
@@ -50,7 +56,7 @@ public class Shop : MonoBehaviour {
 	}
 
 	public void UpgradeGhost(){
-		int price = (int)Mathf.Pow (powerups.ghostUpgradeLevel, 3);
+		int price = (int)Mathf.Pow (powerups.ghostUpgradeLevel, 3) + 50;
 		if (playerStats.totalCoins >= price) {
 			powerups.ghostUpgradeLevel++;
 			playerStats.totalCoins -= price;
@@ -60,6 +66,7 @@ public class Shop : MonoBehaviour {
 	public void Toggle(){
 		isOpen = !isOpen;
 		mainWindow.SetActive (isOpen);
+		playerStats.SaveStats ();
 	}
 
 }

@@ -3,35 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class LevelGenerator : MonoBehaviour {
+public class LandingScreenScroll : MonoBehaviour {
 
-	public GameObject[] spikes;
+	private List<GameObject> tiles;
 	public GameObject tile;
-	public GameObject coin;
-	public GameObject bonusPrefab;
 	public int mapScale;
 	public int renderSizeBack,renderSizeFront;
-	public Transform player;
-	public List<GameObject> tiles;
 	// Use this for initialization
 	void Start () {
-		tiles = new List<GameObject> ();
+		
 	}
-
-	void Update(){
+	
+	// Update is called once per frame
+	void Update () {
 		GenerateTiles ();
 	}
 
 	public void GenerateTiles(){
-		float curX = 0;
-
-		if (player.gameObject.activeSelf) {
-			curX = (player.position.x / mapScale);	
-		} else {
-			curX = (Camera.main.transform.position.x / mapScale);
-		}
-
-		int minX = Mathf.FloorToInt (curX - renderSizeBack);
+		float curX = (Camera.main.transform.position.x / mapScale);
+		int minX = Mathf.FloorToInt(curX - renderSizeBack);
 		int maxX = Mathf.CeilToInt (curX + renderSizeFront);
 		List<GameObject> used = new List<GameObject> ();
 		for (int i = minX; i < maxX; i++) {
@@ -50,14 +40,5 @@ public class LevelGenerator : MonoBehaviour {
 			tiles.Remove (item);
 			Destroy (item);
 		}
-	}
-
-	public void Reset(){
-		foreach (var item in tiles) {
-			Destroy (item);
-		}
-		tiles = new List<GameObject> ();
-		player.GetComponent<PlayerController> ().Die ();
-
 	}
 }
