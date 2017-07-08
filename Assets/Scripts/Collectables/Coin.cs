@@ -4,12 +4,32 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour {
 	bool destroyOnCoin = true;
+	private PlayScreen playScreen;
+	private PlayerController player;
 	void Start(){
-		Invoke ("Flip", 1f);
+		playScreen = FindObjectOfType<PlayScreen> ();
+		player = playScreen.player.GetComponent<PlayerController> ();
+		Invoke ("Flip", .1f);
 	}
 
 	void Flip(){
 		destroyOnCoin = false;
+	}
+
+	void Update(){
+		if (player.ghostEnabled) {
+			if (Vector2.Distance (transform.position, player.transform.position) < 2) {
+				if (FindObjectOfType<PlayerController> ().scoreBonus) {
+
+					player.GetComponent<PlayerStats> ().coinCount += 2;
+				} else {
+
+					player.GetComponent<PlayerStats> ().coinCount++;
+				}
+				player.GetComponent<AudioSource> ().Play ();
+				Destroy (this.gameObject);
+			}
+		}
 	}
 
 	void OnTriggerStay2D(Collider2D col){

@@ -4,11 +4,25 @@ using UnityEngine;
 
 public class ScoreBonus : MonoBehaviour {
 	public float countDownTime = 10f;
+	private PlayScreen playScreen;
 	private PlayerController playerController;
 	void Start(){
-		playerController = FindObjectOfType<PlayerController> ();
+		playScreen = FindObjectOfType<PlayScreen> ();
+		playerController = playScreen.player.GetComponent<PlayerController> ();
 	}
 
+	void Update(){
+		if (playerController.ghostEnabled) {
+			if (Vector2.Distance (transform.position, playerController.transform.position) < 2) {
+				
+				this.transform.parent = null;
+				StartCoroutine (ScoreBonusCountdown(playerController.GetComponent<PlayerController>()));
+				GetComponent<TextMesh> ().text = "";
+				GetComponent<BoxCollider2D> ().enabled = false;
+
+			}
+		}
+	}
 
 	void OnTriggerEnter2D(Collider2D col){
 		if (col.tag != "Player") {
@@ -16,6 +30,8 @@ public class ScoreBonus : MonoBehaviour {
 				Destroy (this.gameObject);
 			}
 		} else {
+			
+			this.transform.parent = null;
 			StartCoroutine (ScoreBonusCountdown(col.gameObject.GetComponent<PlayerController>()));
 			GetComponent<TextMesh> ().text = "";
 			GetComponent<BoxCollider2D> ().enabled = false;

@@ -24,6 +24,7 @@ public class PlayScreen : MonoBehaviour {
 		isPlaying = true;
 		FindObjectOfType<PlayerController> ().canPlay = true;
 		FindObjectOfType<PowerupController> ().SetupPowerupBar ();
+
 	}
 
 	public void Back(){

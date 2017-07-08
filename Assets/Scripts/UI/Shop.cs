@@ -11,6 +11,8 @@ public class Shop : MonoBehaviour {
 	public Text magnetBuyPrice,magnetUpgradePrice;
 	public Text ghostAmount,ghostLevel;
 	public Text ghostBuyPrice,ghostUpgradePrice;
+	public Text reviveAmount;
+	public Text reviveBuyPrice;
 	PowerupController powerups;
 	public PlayerStats playerStats;
 	void Start(){
@@ -29,6 +31,9 @@ public class Shop : MonoBehaviour {
 			ghostLevel.text = "Current Level \n" + powerups.ghostUpgradeLevel;
 			ghostBuyPrice.text = "25";
 			ghostUpgradePrice.text = ((int)Mathf.Pow (powerups.ghostUpgradeLevel, 3) + 50).ToString();
+
+			reviveAmount.text = "Owned \n" + powerups.reviveAmount;
+			reviveBuyPrice.text = "100";
 		}
 			
 	}
@@ -44,6 +49,13 @@ public class Shop : MonoBehaviour {
 		if (playerStats.totalCoins >= 25) {
 			powerups.ghostAmount++;
 			playerStats.totalCoins -= 25;
+		}
+	}
+
+	public void BuyRevive(){
+		if (playerStats.totalCoins >= 100) {
+			powerups.reviveAmount++;
+			playerStats.totalCoins -= 100;
 		}
 	}
 

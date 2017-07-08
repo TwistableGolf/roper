@@ -13,7 +13,7 @@ public class PowerupController : MonoBehaviour {
 	public GameObject magnetShopPrefab, ghostShopPrefab;
 
 	//[HideInInspector]
-	public int magnetAmount, ghostAmount;
+	public int magnetAmount, ghostAmount, reviveAmount;
 	//[HideInInspector]
 	public int magnetUpgradeLevel = 1, ghostUpgradeLevel = 1;
 
@@ -28,10 +28,14 @@ public class PowerupController : MonoBehaviour {
 
 	private Image powerupImage_magnet, powerupImage_ghost;
 	private Text powerupCounter_magnet, powerupCounter_ghost;
+	public Text powerupCounter_revive;
 
 	private bool setUp;
 
+	public GameObject reviveButton;
+	private PlayerController player;
 	void Start(){
+		player = FindObjectOfType<PlayerController> ();
 		setUp = false;
 	}
 
@@ -56,6 +60,15 @@ public class PowerupController : MonoBehaviour {
 		if (powerupCounter_ghost != null) {
 			powerupCounter_ghost.text = ghostAmount.ToString();
 		}
+
+		powerupCounter_revive.text = reviveAmount.ToString ();
+
+		if (reviveAmount > 0 && !player.hasRevived) {
+			reviveButton.SetActive (true);
+		} else {
+			reviveButton.SetActive (false);
+		}
+
 	}
 
 	public void SetupPowerupBar(){
@@ -185,12 +198,21 @@ public class PowerupController : MonoBehaviour {
 		}
 	}
 
+	public void Revive (){
+		reviveAmount--;
+		FindObjectOfType<PlayerController> ().Revive();
+	}
+
 	public void DisablePlayerHook(){
-		FindObjectOfType<PlayerController> ().canShoot = false;
+		if(FindObjectOfType<PlayScreen>().isPlaying)
+			FindObjectOfType<PlayerController> ().canShoot = false;
+
 	}
 
 	public void EnablePlayerHook(){
-		FindObjectOfType<PlayerController> ().canShoot = true;
+		if(FindObjectOfType<PlayScreen>().isPlaying)
+			FindObjectOfType<PlayerController> ().canShoot = true;
+
 	}
 
 }

@@ -10,8 +10,7 @@ public class Options : MonoBehaviour {
 	bool isOpen = false;
 
 	void Update () {
-		if(playerStats.isActiveAndEnabled)
-			playerStats.volumeLevel = volumeSlider.value;
+
 	}
 
 	public void Toggle(){

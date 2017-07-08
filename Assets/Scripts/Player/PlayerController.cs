@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+#if UNITY_ADS
 using UnityEngine.Advertisements;
+#endif
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
@@ -30,17 +32,17 @@ public class PlayerController : MonoBehaviour {
 
 	public BoxCollider2D boxCol;
 	public PolygonCollider2D polyCol;
+
+	public bool hasRevived = false;
 	// Use this for initialization
 
 	void Start () {
 		rigid = GetComponent<Rigidbody2D> ();
 		stats = FindObjectOfType<PlayerStats> ();
 		render = GetComponent<SpriteRenderer> ();
-//		#if UNITY_ADS
-//		if (!Advertisement.isInitialized) {
-//			Advertisement.Initialize ("1279490");
-//		}
-//		#endif
+		#if UNITY_ADS
+		Advertisement.Initialize ("1279490");
+		#endif
 	}
 	
 	// Update is called once per frame
@@ -241,10 +243,6 @@ public class PlayerController : MonoBehaviour {
 		}
 		FindObjectOfType<DeathScreen>().DeathScreenPopup(stats.score,stats.coinCount,stats.highScore);
 		stats.totalCoins += stats.coinCount;
-		stats.coinCount = 0;
-		oldX = 0;
-
-		stats.score = 0;
 
 
 		dead = true;
@@ -263,6 +261,10 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 	public void Reset(){
+		stats.coinCount = 0;
+		oldX = 0;
+
+		stats.score = 0;
 		transform.position = Vector3.zero;
 		transform.rotation = Quaternion.identity;
 		rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -271,6 +273,22 @@ public class PlayerController : MonoBehaviour {
 		FindObjectOfType<PowerupController> ().DisableGhost (true);
 		GetComponent<BoxCollider2D> ().enabled = true;
 		GetComponent<PolygonCollider2D> ().enabled = false;
+		hasRevived = false;
+	}
+
+	public void Revive(){
+		transform.position = new Vector3 (transform.position.x, 0);
+		transform.rotation = Quaternion.identity;
+		rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+		rigid.bodyType = RigidbodyType2D.Static;
+		FindObjectOfType<PowerupController> ().DisableMagnet (true);
+		FindObjectOfType<PowerupController> ().DisableGhost (true);
+		GetComponent<BoxCollider2D> ().enabled = true;
+		GetComponent<PolygonCollider2D> ().enabled = false;
+		FindObjectOfType<DeathScreen> ().deathScreen.SetActive (false);
+		hasRevived = true;
+		dead = false;
+		canShoot = true;
 	}
 
 	public void Toggle(){

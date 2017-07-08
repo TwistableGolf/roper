@@ -8,13 +8,11 @@ public class PlayerStats : MonoBehaviour {
 	public int totalCoins;
 	public int score;
 	public int highScore;
-	PlayScreen playScreen;
 	public Text coinCounter,pointCounter,bonusText;
 	private PlayerController player;
 	private PowerupController powerups;
-	public float volumeLevel = 1f;
+	public bool soundEnabled = true;
 	void Start(){
-		playScreen = FindObjectOfType<PlayScreen> ();
 		player = FindObjectOfType<PlayerController> ();
 		powerups = FindObjectOfType<PowerupController> ();
 		string loadString = null;
@@ -25,7 +23,7 @@ public class PlayerStats : MonoBehaviour {
 		} else {
 			
 			string[] saveArray = loadString.Split (',');
-			if (saveArray.Length != 7) {
+			if (saveArray.Length != 8) {
 				print ("Save in incorrect format");
 				SaveStats ();
 				return;
@@ -50,17 +48,15 @@ public class PlayerStats : MonoBehaviour {
 			powerups.magnetAmount + "," +
 			powerups.magnetUpgradeLevel + "," +
 			powerups.ghostAmount + "," +
-			powerups.ghostUpgradeLevel;
+			powerups.ghostUpgradeLevel+ "," +
+			soundEnabled.ToString();
 		
 		PlayerPrefs.SetString ("SaveString", saveString);
 		PlayerPrefs.Save ();
 	}
 
 	void Update(){
-		if (playScreen.isPlaying)
-			AudioListener.volume = volumeLevel;
-		else
-			AudioListener.volume = 0f;
+		
 		coinCounter.text = "Coins  " + (totalCoins + coinCount);
 		pointCounter.text = score + "  M";
 		if (player.scoreBonus)
